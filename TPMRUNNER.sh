@@ -1,0 +1,15 @@
+cd elites 
+sh TPMCat.sh
+cd ..
+cd landrace
+sh TPMCat.sh
+cd ..
+cd otherwild
+sh TPMCat.sh
+cd ..
+cd modern
+sh TPMCat.sh
+cd ..
+cd wild_anuus
+sh TPMCat.sh
+cd ..

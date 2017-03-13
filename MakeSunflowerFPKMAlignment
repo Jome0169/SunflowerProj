@@ -1,0 +1,43 @@
+###### THe purpose of this make file is to create a seamless pipeline utalizing
+#Helianthus data and a suite of tools to make a pipeline that is more efficient
+#and can be recreated on any system even when minor changes to the scripts
+#occur.
+
+
+
+#Target : Dependency
+#	COmmand
+#
+
+
+
+#Run Trimmomatic, cast out unpaired reads ;). File Dependencies are the
+#origional FASTq files
+
+${file}_forward_paired.fq ${file}_forward_unpaired.fq ${file}_reverse_paired.fq ${file}_reverse_unpaired.fq : ${file}_1.fq ${file}_2.fq
+	java -jar /home/pabster212/bigdata1/trinityrnaseq-2.1.1/trinity-plugins/Trimmomatic/trimmomatic.jar PE -phred64 ${file}_1.fq ${file}_2.fq ${file}_forward_paired.fq ${file}_forward_unpaired.fq ${file}_reverse_paired.fq ${file}_reverse_unpaired.fq ILLUMINACLIP:/home/pabster212/bigdata1/sunflower_transcriptomes/contaminants.fa:2:30:10 LEADING:10 TRAILING:10 MINLEN:74
+
+
+
+${file}_TrinityAlignemnt : ${file}_total_forward.fq ${file}_total_reverse.fq 
+	trinityrnaseq_r20140717/util/align_and_estimate_abundance.pl --transcripts /home/pabster212/bigdata1/Trinity.fasta --seqType fq --thread_count 20 --left $PWD/${file}_total_forward.fq --right $PWD/${file}_total_reverse.fq --est_method RSEM --aln_method bowtie --bowtie_RSEM '--all --best --strata -v 3 -m 700 --chunkmbs 512' --prep_reference --output_dir ${file}_TrinityAlignemnt
+
+
+
+TABLE FILTER > TrimmedIsoforms.txt
+
+
+fpkmCalculation.sh
+
+TPM.cat
+
+
+
+
+FilterRunner.sh > Runs python Table Filter
+
+Python Table Filter. Runs through Totalisoforms.txt, and only reports on isoforms that sum greater than 1 in multiple species> TrimmedIsoforms.txt
+
+
+
+
